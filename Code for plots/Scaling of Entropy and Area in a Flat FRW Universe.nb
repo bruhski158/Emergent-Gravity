@@ -1,0 +1,22 @@
+S[\[Chi]0_] := \[Chi]0^3;
+A[\[Chi]0_] := \[Chi]0^2;
+Ratio[\[Chi]0_] := S[\[Chi]0]/A[\[Chi]0];
+
+plot = LogLogPlot[{S[\[Chi]0], A[\[Chi]0], Ratio[\[Chi]0]}, {\[Chi]0, 
+    0.1, 100}, 
+   PlotLegends -> 
+    Placed[{"Entropy S(\!\(\*SubscriptBox[\(\[Chi]\), \(0\)]\)) \[Proportional] \
+\!\(\*SubsuperscriptBox[\(\[Chi]\), \(0\), \(3\)]\)", 
+      "Area A(\!\(\*SubscriptBox[\(\[Chi]\), \(0\)]\)) \[Proportional] \
+\!\(\*SubsuperscriptBox[\(\[Chi]\), \(0\), \(2\)]\)", 
+      "Ratio S/A = \!\(\*SubscriptBox[\(\[Chi]\), \(0\)]\)"}, {0.15, 
+      0.85}], FrameLabel -> {"Comoving radius (\!\(\*SubscriptBox\
+[\(\[Chi]\), \(0\)]\)) [Mpc]", "Scaling Value [Arbitrary Units]"}, 
+   LabelStyle -> Directive[12, Black], 
+   PlotLabel -> 
+    Style["Scaling of Entropy and Area in a Flat FRW Universe", Bold, 
+     14], PlotTheme -> "Detailed", 
+   PlotStyle -> {Directive[Thick, Blue], Directive[Thick, Red], 
+     Directive[Thick, Dashed, Black]}, ImageSize -> Large];
+
+Print[plot]

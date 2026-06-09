@@ -1,0 +1,39 @@
+R[en_] := 2 en;
+Sbh[en_] := 4 \[Pi] en^2;
+Sbek[en_] := 2 \[Pi] en*R[en];
+
+plot1 = Plot[{Sbh[en], Sbek[en]}, {en, 0.1, 10}, 
+   PlotStyle -> {Directive[AbsoluteThickness[5], LightBlue], 
+     Directive[AbsoluteThickness[2], Dashed, Black]}, 
+   PlotLegends -> 
+    Placed[{"\!\(\*SubscriptBox[\(S\), \(BH\)]\)(E) = \
+4\[Pi]\!\(\*SuperscriptBox[\(E\), \(2\)]\)", 
+      "\!\(\*SubscriptBox[\(S\), \(Bek\)]\)(E) = 2\[Pi]E R(E)"}, 
+     "TopLeft"],
+   FrameLabel -> {"Energy (E) [\!\(\*SubscriptBox[\(E\), \(P\)]\)]", 
+     "Entropy (S) [\!\(\*SubscriptBox[\(k\), \(B\)]\)]"}, 
+   LabelStyle -> Directive[12, Black], 
+   PlotLabel -> 
+    Style["Saturation of the Bekenstein bound\nby a Schwarzschild \
+black hole", Bold, 14], PlotTheme -> "Detailed", ImageSize -> Large];
+
+Rfixed = 10;
+SbekSub[en_] := 2 \[Pi] en*Rfixed;
+MaxEntropy = \[Pi] Rfixed^2;
+
+plot2 = Plot[{SbekSub[en], MaxEntropy}, {en, 0, Rfixed/2}, 
+   PlotStyle -> {Blue, Directive[Red, Dashed]}, Filling -> {1 -> Axis},
+    PlotLegends -> 
+    Placed[{"\!\(\*SubscriptBox[\(S\), \(Bek\)]\) for fixed R=10", 
+      "Max Entropy (\!\(\*SubscriptBox[\(S\), \(BH\)]\)) = \
+\[Pi]\!\(\*SuperscriptBox[\(R\), \(2\)]\)"}, 
+     "TopLeft"],
+   FrameLabel -> {"Energy (E) [\!\(\*SubscriptBox[\(E\), \(P\)]\)]", 
+     "Entropy (S) [\!\(\*SubscriptBox[\(k\), \(B\)]\)]"}, 
+   LabelStyle -> Directive[12, Black], 
+   PlotLabel -> 
+    Style["Sub-black-hole configurations (Fixed R=10)\nE < R/2 \
+illustrates black holes are maximal entropy objects", Bold, 12], 
+   PlotTheme -> "Detailed", ImageSize -> Large];
+
+Print[plot1, plot2]

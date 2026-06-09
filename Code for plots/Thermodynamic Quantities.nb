@@ -1,0 +1,37 @@
+c = 2.9979*^8;        
+G = 6.6743*^-11;      
+hbar = 1.0546*^-34;   
+kB = 1.3806*^-23;     
+Msun = 1.9885*^30;    
+
+Mkg[m_] := m*Msun;
+Tbh[m_] := (hbar*c^3)/(8 \[Pi]*G*Mkg[m]*kB);
+Sbh[m_] := (4 \[Pi]*kB*G*Mkg[m]^2)/(hbar*c);
+Cbh[m_] := -(8 \[Pi]*kB*G*Mkg[m]^2)/(hbar*c);
+
+plotT = Plot[Tbh[m]*10^8, {m, 0.5, 20}, PlotTheme -> "Detailed", 
+   FrameLabel -> {"Mass (M) [\!\(\*SubscriptBox[\(M\), \(\[Sun]\)]\)]",
+      "Temperature (\!\(\*SubscriptBox[\(T\), \(BH\)]\)) [1e-8 K]"}, 
+   LabelStyle -> Directive[12, Black], 
+   PlotLabel -> 
+    Style["Hawking Temperature vs Mass\n(Larger black holes are \
+colder)", Bold, 12], PlotStyle -> {Thick, Red}, ImageSize -> Medium];
+
+plotS = Plot[Sbh[m]*10^-55, {m, 0.5, 20}, PlotTheme -> "Detailed", 
+   FrameLabel -> {"Mass (M) [\!\(\*SubscriptBox[\(M\), \(\[Sun]\)]\)]",
+      "Entropy (\!\(\*SubscriptBox[\(S\), \(BH\)]\)) [1e55 J/K]"}, 
+   LabelStyle -> Directive[12, Black], 
+   PlotLabel -> 
+    Style["Bekenstein-Hawking Entropy vs Mass\n(Entropy grows \
+quadratically)", Bold, 12], PlotStyle -> {Thick, Blue}, 
+   ImageSize -> Medium];
+
+plotC = Plot[Cbh[m]*10^-55, {m, 0.5, 20}, PlotTheme -> "Detailed", 
+   FrameLabel -> {"Mass (M) [\!\(\*SubscriptBox[\(M\), \(\[Sun]\)]\)]",
+      "Heat Capacity (C) [1e55 J/K]"}, 
+   LabelStyle -> Directive[12, Black], 
+   PlotLabel -> 
+    Style["Heat Capacity vs Mass\n(Heat capacity is negative)", Bold, 
+     12], PlotStyle -> {Thick, Darker[Green]}, ImageSize -> Medium];
+
+Print[plotT, plotS, plotC]

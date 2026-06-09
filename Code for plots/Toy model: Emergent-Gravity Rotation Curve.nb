@@ -1,0 +1,24 @@
+Gconst = 1;
+Mb = 1;
+a0 = 0.01; 
+
+
+gb[r_] := (Gconst*Mb)/r^2;
+gd[r_] := Sqrt[a0*gb[r]];
+
+vn[r_] := Sqrt[r*gb[r]];
+vtot[r_] := Sqrt[r*(gb[r] + gd[r])];
+
+
+Plot[{vn[r], vtot[r]}, {r, 0.1, 100}, 
+ PlotStyle -> {Directive[Thick, Dashed, Blue], Directive[Thick, Red]},
+  PlotTheme -> "Detailed", 
+ FrameLabel -> {"Radius (r)", "Circular Velocity (v)"}, 
+ LabelStyle -> Directive[12, Black], 
+ PlotLegends -> 
+  Placed[{"\!\(\*SubscriptBox[\(v\), \(N\)]\)(r) (Purely Newtonian)", 
+    "\!\(\*SubscriptBox[\(v\), \(tot\)]\)(r) (With Emergent \
+Component)"}, {0.75, 0.85}], 
+ PlotLabel -> 
+  Style["Toy Model: Emergent-Gravity Rotation Curve", Bold, 12], 
+ ImageSize -> Large]

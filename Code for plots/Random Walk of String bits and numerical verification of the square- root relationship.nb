@@ -1,0 +1,93 @@
+GenerateStringWalk[M_Integer, ls_Real : 1.0] := 
+ Module[{steps, path}, steps = ls*RandomPoint[Sphere[], M];
+  path = Prepend[Accumulate[steps], {0, 0, 0}];
+  path]
+
+VerifyHolographicScaling[MValues_List, numTrials_Integer : 100, 
+  ls_Real : 1.0] := 
+ Module[{}, 
+  Table[With[{sqDistances = 
+      Table[Norm[Total[ls*RandomPoint[Sphere[], m]]]^2, {numTrials}]},
+     With[{meanSq = Mean[sqDistances], 
+      seSq = StandardDeviation[sqDistances]/Sqrt[numTrials]}, {m, 
+      Sqrt[meanSq], seSq/(2*Sqrt[meanSq])}]], {m, MValues}]]
+
+MSingle = 5000;
+ls = 1.0;
+stringPath = GenerateStringWalk[MSingle, ls];
+
+plot3D = 
+  Graphics3D[{{Purple, Opacity[0.7], Line[stringPath]}, {Green, 
+     PointSize[0.03], Point[First[stringPath]]}, {Red, PointSize[0.03],
+      Point[Last[stringPath]]}}, Axes -> True, Boxed -> True, 
+   AxesLabel -> {"X", "Y", "Z"}, 
+   PlotLabel -> 
+    Style[StringForm[
+      "Highly Excited String State\n(Random Walk, M=`` bits)", 
+      MSingle], 14, Bold], ImageSize -> Medium];
+
+MValuesLog = {50, 100, 200, 500, 1000, 2000, 5000, 10000};
+numTrialsLog = 500;
+simulatedDataLog = 
+  VerifyHolographicScaling[MValuesLog, numTrialsLog, ls];
+
+logData = {Log[#[[1]]], Log[#[[2]]]} & /@ simulatedDataLog;
+fit = LinearModelFit[logData, x, x];
+alphaFitted = fit["BestFitParameters"][[2]];
+alphaError = fit["ParameterErrors"][[2]];
+AFitted = Exp[fit["BestFitParameters"][[1]]];
+
+plotDataLog = 
+  ListLogLogPlot[{#[[1]], Around[#[[2]], #[[3]]]} & /@ 
+    simulatedDataLog, PlotStyle -> Directive[Red, PointSize[0.015]], 
+   IntervalMarkers -> "Fences", 
+   IntervalMarkersStyle -> Directive[Red, Thick], 
+   PlotLegends -> 
+    Placed[{"Simulated \!\(\*SubscriptBox[\(R\), \(rms\)]\)"}, {0.2, 
+      0.85}]];
+
+plotFitLog = 
+  LogLogPlot[
+   AFitted*m^alphaFitted, {m, Min[MValuesLog], Max[MValuesLog]}, 
+   PlotStyle -> Directive[Thick, Dashed, Blue], 
+   PlotLegends -> 
+    Placed[{StringForm[
+       "Power Law Fit: \!\(\*SubscriptBox[\(R\), \(rms\)]\) = A \
+\!\(\*SuperscriptBox[\(M\), \(\[Alpha]\)]\)\n\[Alpha] = `` \[PlusMinus] \
+``", NumberForm[alphaFitted, 4], NumberForm[alphaError, 4]]}, {0.2, 
+      0.70}]];
+
+plotLogLog = 
+  Show[plotDataLog, plotFitLog, PlotTheme -> "Detailed", 
+   Frame -> True, 
+   FrameLabel -> {"Number of String Bits (M)", 
+     "RMS Distance (\!\(\*SubscriptBox[\(R\), \(rms\)]\))"}, 
+   LabelStyle -> Directive[12, Black], 
+   PlotLabel -> 
+    Style["Log-Log Scale: Numerical Verification", Bold, 14], 
+   ImageSize -> Large];
+
+MArrayLin = Range[100, 10000, 500];
+numTrialsLin = 200;
+simulatedDataLin = 
+  VerifyHolographicScaling[MArrayLin, numTrialsLin, ls];
+
+plotLinear = 
+  Show[ListPlot[{#[[1]], Around[#[[2]], #[[3]]]} & /@ 
+     simulatedDataLin, PlotStyle -> Directive[Blue, PointSize[0.015]],
+     IntervalMarkers -> "Fences", 
+    IntervalMarkersStyle -> Directive[Blue, Thick], 
+    PlotLegends -> Placed[{"Simulated RMS Radius"}, {0.2, 0.85}]], 
+   Plot[ls*Sqrt[m], {m, Min[MArrayLin], Max[MArrayLin]}, 
+    PlotStyle -> Directive[Black, Thick], 
+    PlotLegends -> 
+     Placed[{"Theoretical R = \!\(\*SubscriptBox[\(l\), \(s\)]\) \
+\!\(\*SqrtBox[\(M\)]\)"}, {0.2, 0.75}]], PlotTheme -> "Detailed", 
+   Frame -> True, 
+   FrameLabel -> {"Total Mass / Number of Bits (M)", 
+     "Spatial Radius (R)"}, LabelStyle -> Directive[12, Black], 
+   PlotLabel -> 
+    Style["Linear Scale: Spatial Radius vs. String Mass", 14, Bold], 
+   ImageSize -> Large, GridLines -> Automatic];
+
+Print[plot3D, plotLogLog, plotLinear]
