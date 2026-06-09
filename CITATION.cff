@@ -1,0 +1,22 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Emergent Gravity
+message: >-
+  If you use this code, or results, please cite it using the metadata
+  from this file.
+type: software 
+authors:
+  - given-names: Swadhin
+    family-names: Rout
+    email: srout@alumni.uv.es
+    affiliation: University of Valencia
+    orcid: 'https://orcid.org/0000-0001-6648-6988'
+repository-code: 'https://github.com/bruhski158/Emergent-Gravity'
+abstract: >-
+  This project focuses on Emergent gravity and Holographic theories. The paper and the main repo can be found here [Master Thesis](https://github.com/bruhski158/Master_Thesis). The code in this repo has been used to generate several plots and figures in the master thesis, please refer to the thesis and therein citations to see what these code produce.
+keywords:
+- code
+license: MIT
+date-released: '2026-06-30'
