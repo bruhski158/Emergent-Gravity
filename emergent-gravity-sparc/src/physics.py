@@ -1,8 +1,34 @@
 import numpy as np
 from src.calculus import smooth_derivative_log
 
-# Standard acceleration scale (approx cH_0)
 A0_DEFAULT = 1.2e-10
+
+G_NEWTON = 6.67430e-11  # m^3 kg^-1 s^-2
+MSUN_TO_KG = 1.98847e30
+KPC_TO_M = 3.085677581e19
+
+def model_nfw_acceleration(r_m, rho0_msun_pc3, rs_kpc):
+    """
+    Calculates the NFW dark matter acceleration.
+    r_m: radius in meters
+    rho0_msun_pc3: characteristic density in M_sun / pc^3 (standard literature unit)
+    rs_kpc: scale radius in kpc
+    """
+    # Convert inputs to SI units
+    rs_m = rs_kpc * KPC_TO_M
+    # Convert M_sun/pc^3 to kg/m^3
+    rho0_kg_m3 = rho0_msun_pc3 * (MSUN_TO_KG / (3.086e16)**3) 
+    
+    x = r_m / rs_m
+    
+    # Enclosed NFW Mass (Eq from thesis)
+    mass_term = np.log(1.0 + x) - (x / (1.0 + x))
+    m_nfw_kg = 4.0 * np.pi * rho0_kg_m3 * (rs_m**3) * mass_term
+    
+    # NFW Acceleration: G * M / r^2
+    g_nfw = (G_NEWTON * m_nfw_kg) / (r_m**2)
+    
+    return g_nfw
 
 def model_baryons_only(g_bar):
     """Model 1: Pure Newtonian baryons."""

@@ -6,36 +6,33 @@ KM_TO_M = 1.0e3
 KPC_TO_M = 3.085677581e19
 
 def load_and_convert_sparc(filepath, ups_disk=0.5, ups_bulge=0.7):
-    """
-    Loads a raw SPARC .dat file, applies mass-to-light ratios, 
-    and computes g_obs and g_bar in strict SI units (m/s^2).
-    """
-    # Explicitly define the column names because the file's header is hidden behind a '#'
     col_names = ['Rad', 'Vobs', 'errV', 'Vgas', 'Vdisk', 'Vbul', 'SBdisk', 'SBbul']
-    
-    # Read the file, ignore the '#' text lines, and enforce our column names
-    df = pd.read_csv(filepath, sep='\s+', comment='#', names=col_names)
-    
-    # Drop rows where Radius is 0 to prevent division-by-zero
+    df = pd.read_csv(filepath, sep=r'\s+', comment='#', names=col_names)
     df = df[df['Rad'] > 0].copy()
     
-    # Reconstruct Baryonic Velocity Squared (Eq. 5)
-    # Using np.sign to maintain the direction of the gravitational pull
     v_gas_sq = np.sign(df['Vgas']) * df['Vgas']**2
     v_disk_sq = np.sign(df['Vdisk']) * df['Vdisk']**2
     v_bulge_sq = np.sign(df['Vbul']) * df['Vbul']**2
     
     v_bar_sq = v_gas_sq + (ups_disk * v_disk_sq) + (ups_bulge * v_bulge_sq)
     
-    # Convert to SI units (Eq. 6)
     radius_m = df['Rad'] * KPC_TO_M
     v_obs_m_s = df['Vobs'] * KM_TO_M
+    err_v_m_s = df['errV'] * KM_TO_M
     
-    # Calculate Accelerations
     df['g_obs'] = (v_obs_m_s**2) / radius_m
     df['g_bar'] = (v_bar_sq * (KM_TO_M**2)) / radius_m
     
+    # NEW: Error propagation
+    # sigma_g = (2 * v_obs * sigma_v) / r
+    df['err_g_obs'] = (2.0 * v_obs_m_s * err_v_m_s) / radius_m
+    
+    # Convert to log10 space error for the chi-square objective function
+    # sigma_log10(x) = sigma_x / (x * ln(10))
+    df['err_log_g_obs'] = df['err_g_obs'] / (df['g_obs'] * np.log(10))
+    
     return df
+
 
 def save_processed_data(df, galaxy_name, output_dir="data/processed/"):
     """Saves the cleaned DataFrame to a CSV."""
