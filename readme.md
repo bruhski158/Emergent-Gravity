@@ -128,7 +128,7 @@ This project is licensed under the terms provided in the [LICENSE](LICENSE) file
 
 ## 📝 Citation
 
-If you use this pipeline, codebase, or the results generated herein for your research, please cite this repository/thesis directly. A citation file (`CITATION.cff`) is included in the root of this repository for your convenience.
+If you use this pipeline, codebase, or the results generated herein for your research, please cite this repository/thesis directly. A citation file ([CITATION.cff](CITATIOIN.cff)) is included in the root of this repository for your convenience.
 
 Additionally, this project relies on the SPARC database. **Any use of this data must also cite the original SPARC publication:**
 
