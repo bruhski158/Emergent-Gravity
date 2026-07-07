@@ -64,7 +64,7 @@ with open(sparc_path, 'r') as f:
         if mrt_name_norm in failures_normalized:
             original_name = failures_normalized[mrt_name_norm]
             try:
-                q_val = int(parts[4])
+                q_val = int(parts[-2])
                 q_flags[original_name] = q_val
             except (ValueError, IndexError):
                 pass
