@@ -1,11 +1,10 @@
 import os
 import sys
 import pandas as pd
-
+import matplotlib.pyplot as plt
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(script_dir, '..'))
 sys.path.append(project_root)
-
 from src.physics import (model_empirical_rar, model_mond_simple, 
                          model_emergent_gravity_point_mass, model_emergent_gravity_full)
 from src.plotting import plot_diverse_galaxies
@@ -43,7 +42,16 @@ def main():
         })
         
     save_path = os.path.join(project_root, "results", "figures", "02_diverse_galaxies_comparison.png")
-    plot_diverse_galaxies(galaxy_data_list, save_path=save_path)
+    
+    plt.rcParams['figure.figsize'] = [18, 6]
+
+    fig, axes = plot_diverse_galaxies(galaxy_data_list, save_path=None)
+
+
+    fig.subplots_adjust(wspace=0.05, bottom=0.2)
+
+    fig.savefig(save_path, dpi=150, bbox_inches='tight')
+    print(f"Saved figure to {save_path}")
 
 if __name__ == "__main__":
     main()
